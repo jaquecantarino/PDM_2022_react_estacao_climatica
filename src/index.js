@@ -11,6 +11,7 @@ class App extends React.Component{
     
     constructor(props){
         super(props)
+        console.log('construtor')
         this.state = { //definição de estado do componente, estado local do componente
             latitude: null,
             longitude: null,
@@ -74,52 +75,75 @@ class App extends React.Component{
         //opera de maneira assincrona.
     }
 
-        render(){
-        return (
-            //criando container
-            <div className='container mt-2'> 
-            {/* nova linha que me da 12 colunas para ocupar */}
-                <div className="row justify-content-center"> 
-                {/* identificando que meu conteudo vai usar 8 coluna das linhas  */}
-                    <div className="col-md-8"> 
-                    {/* criando card pai */}
-                        <div className="card"> 
-                        {/* filho do card */}
-                            <div className="card body"> 
-                            {/* dentro do card vamos criar um novo retangulo que abriga um texto e um icone */}
-                                <div className="d-flex align-items-center border rounded mb-2" style={{height: '6rem'}}>
-                                    {/* considerando o estado do icone criado acima como parametro para mostrar o icone correto */}
-                                    <i className={`fas fa-5x ${this.state.icone}`}></i>
-                                    <p className="w-75 ms-3 text-center fs-1"> {this.state.estacao} </p>
-                                </div>
-                                <div>
-                                    <p className="text-center">
-                                        {/* "tenario" condicao se sim v1 se não v2
-                                        condicao ? v1 : v2 */}
-                                        {
-                                            this.state.latitude ? //existe latitude?
-                                                ` Coordenadas: ${this.state.latitude}, ${this.state.longitude}. Data: ${this.state.data}. ` //se tiver mostra essa
-                                            : //indica o "se não"
-                                            this.state.mensagemDeErro ? `${this.state.mensagemDeErro}` :
-                                                ` Clique no botão para saber a sua estação climática ` //se não tiver mostra essa
-                                        }
-                                    </p>
-                                </div>
-                                <button 
-                                    onClick={this.oterLocalizacao}
-                                    className='btn btn-outline-primary w-100 mt-2'>
-                                        Qual a minha estação?
-                                </button>
+    // Criando metodos de ciclo de vida do componente.
+    componentDidMount(){
+        console.log('componentDidMount')
+    }
+
+    componentDidUpdate(){
+        console.log('componentDidUpdate')
+    }
+
+    componentWillUnmount(){
+        console.log('componentWillUnmount')
+    }
+
+    render(){
+    console.log('render')
+    return (
+        //criando container
+        <div className='container mt-2'> 
+        {/* nova linha que me da 12 colunas para ocupar */}
+            <div className="row justify-content-center"> 
+            {/* identificando que meu conteudo vai usar 8 coluna das linhas  */}
+                <div className="col-md-8"> 
+                {/* criando card pai */}
+                    <div className="card"> 
+                     {/* filho do card */}
+                        <div className="card body"> 
+                        {/* dentro do card vamos criar um novo retangulo que abriga um texto e um icone */}
+                            <div className="d-flex align-items-center border rounded mb-2" style={{height: '6rem'}}>
+                                {/* considerando o estado do icone criado acima como parametro para mostrar o icone correto */}
+                                <i className={`fas fa-5x ${this.state.icone}`}></i>
+                                <p className="w-75 ms-3 text-center fs-1"> {this.state.estacao} </p>
                             </div>
+                            <div>
+                                <p className="text-center">
+                                    {/* "tenario" condicao se sim v1 se não v2
+                                        condicao ? v1 : v2 */}
+                                    {
+                                        this.state.latitude ? //existe latitude?
+                                            ` Coordenadas: ${this.state.latitude}, ${this.state.longitude}. Data: ${this.state.data}. ` //se tiver mostra essa
+                                        : //indica o "se não"
+                                            this.state.mensagemDeErro ? `${this.state.mensagemDeErro}` :
+                                            ` Clique no botão para saber a sua estação climática ` //se não tiver mostra essa
+                                    }
+                                </p>
+                            </div>
+                            <button 
+                                onClick={this.oterLocalizacao}
+                                className='btn btn-outline-primary w-100 mt-2'>
+                                    Qual a minha estação?
+                            </button>
+                            {/* Criando o botão que vai matar a aplicação para exemplificar seu uso. */}
+                            <button 
+                                className="btn btn-outline-danger w-100 mt-2"
+                                onClick={() =>{
+                                    ReactDOM.unmountComponentAtNode(document.querySelector('#root'))
+                                }
+                                }>
+                                Unmount ◡̈
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         )
     }
 }
 
 ReactDOM.render(
-    <App/>,
+    <App/>, //o react está instanciando essa classe e iniciando o ciclo de vida dela.
     document.querySelector('#root')
 )
