@@ -16,7 +16,8 @@ class App extends React.Component{
             longitude: null,
             estacao: null, 
             data: null,
-            icone: null
+            icone: null,
+            mensagemDeErro: null
         }
     }
 
@@ -47,7 +48,7 @@ class App extends React.Component{
         "Inverno": "fa-snowman"
     }
 
-    oterLocalizacao(){
+    oterLocalizacao = () => {
         //para acessar a api de localizaçõa (geolocation)
         //função que faz a janelinha que pergunta ao usuario se ele permite usar a localização dele ou não
         window.navigator.geolocation.getCurrentPosition(
@@ -65,6 +66,9 @@ class App extends React.Component{
                     estacao: estacao,
                     icone: icone
                 })
+            },
+            (erro) => {
+                this.setState({mensagemDeErro: 'Ative a sua localização para ver a estação.'})
             }
         ) 
         //opera de maneira assincrona.
@@ -86,7 +90,7 @@ class App extends React.Component{
                                 <div className="d-flex align-items-center border rounded mb-2" style={{height: '6rem'}}>
                                     {/* considerando o estado do icone criado acima como parametro para mostrar o icone correto */}
                                     <i className={`fas fa-5x ${this.state.icone}`}></i>
-                                    <p className="w-75 ms-3 text-center fs-1"> {`${this.state.estacao}`} </p>
+                                    <p className="w-75 ms-3 text-center fs-1"> {this.state.estacao} </p>
                                 </div>
                                 <div>
                                     <p className="text-center">
@@ -94,12 +98,18 @@ class App extends React.Component{
                                         condicao ? v1 : v2 */}
                                         {
                                             this.state.latitude ? //existe latitude?
-                                            ` Coordenadas: ${this.state.latitude}, ${this.state.longitude}. Data: ${this.state.data}. ` //se tiver mostra essa
+                                                ` Coordenadas: ${this.state.latitude}, ${this.state.longitude}. Data: ${this.state.data}. ` //se tiver mostra essa
                                             : //indica o "se não"
-                                            ` Clique no botão para saber a sua estação climática ` //se não tiver mostra essa
+                                            this.state.mensagemDeErro ? `${this.state.mensagemDeErro}` :
+                                                ` Clique no botão para saber a sua estação climática ` //se não tiver mostra essa
                                         }
                                     </p>
                                 </div>
+                                <button 
+                                    onClick={this.oterLocalizacao}
+                                    className='btn btn-outline-primary w-100 mt-2'>
+                                        Qual a minha estação?
+                                </button>
                             </div>
                         </div>
                     </div>
