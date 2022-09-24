@@ -1,6 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import ReactDOM from 'react-dom'
 import React from 'react'
+import EstacaoClimatica from './EstacaoClimatica'
+import Loading from './Loading'
 
 
 //Função que define um componente react
@@ -12,20 +14,29 @@ class App extends React.Component{
     constructor(props){
         super(props)
         console.log('construtor')
-        this.state = { //definição de estado do componente, estado local do componente
-            latitude: null,
-            longitude: null,
-            estacao: null, 
-            data: null,
-            icone: null,
-            mensagemDeErro: null
-        }
+        //this.state = { //definição de estado do componente, estado local do componente
+          //  latitude: null,
+            //longitude: null,
+          //  estacao: null, 
+          //  data: null,
+          //  icone: null,
+          //  mensagemDeErro: null
+        //}
     }
+
+    state = {
+        latitude: null,
+        longitude: null,
+        estacao: null, 
+        data: null,
+        icone: null,
+        mensagemDeErro: null
+    } //outra (forma possivel) alternativa para criar o state, posso usar apenas um.
 
     obterEstacao = (data, latitude) => {
         const ano = data.getFullYear();
         const d1 = new Date(ano, 5, 21)
-        const d2 = new Date(ano, 8, 24)
+        const d2 = new Date(ano, 8, 22)
         const d3 = new Date(ano, 11, 22)
         const d4 = new Date(ano, 3, 21)
         const sul = latitude < 0
@@ -76,15 +87,15 @@ class App extends React.Component{
     }
 
     // Criando metodos de ciclo de vida do componente.
-    componentDidMount(){
-        console.log('componentDidMount')
+    componentDidMount(){ //esse cara executa somente uma vez para cada componente react, para cada instancia
+        this.oterLocalizacao() //a aplicação já nasce pedindo a localização.
     }
 
     componentDidUpdate(){
         console.log('componentDidUpdate')
     }
 
-    componentWillUnmount(){
+    componentWillUnmount(){ //esse cara executa somente uma vez para cada componente react, para cada instancia
         console.log('componentWillUnmount')
     }
 
@@ -97,45 +108,27 @@ class App extends React.Component{
             <div className="row justify-content-center"> 
             {/* identificando que meu conteudo vai usar 8 coluna das linhas  */}
                 <div className="col-md-8"> 
-                {/* criando card pai */}
-                    <div className="card"> 
-                     {/* filho do card */}
-                        <div className="card body"> 
-                        {/* dentro do card vamos criar um novo retangulo que abriga um texto e um icone */}
-                            <div className="d-flex align-items-center border rounded mb-2" style={{height: '6rem'}}>
-                                {/* considerando o estado do icone criado acima como parametro para mostrar o icone correto */}
-                                <i className={`fas fa-5x ${this.state.icone}`}></i>
-                                <p className="w-75 ms-3 text-center fs-1"> {this.state.estacao} </p>
-                            </div>
-                            <div>
-                                <p className="text-center">
-                                    {/* "tenario" condicao se sim v1 se não v2
-                                        condicao ? v1 : v2 */}
-                                    {
-                                        this.state.latitude ? //existe latitude?
-                                            ` Coordenadas: ${this.state.latitude}, ${this.state.longitude}. Data: ${this.state.data}. ` //se tiver mostra essa
-                                        : //indica o "se não"
-                                            this.state.mensagemDeErro ? `${this.state.mensagemDeErro}` :
-                                            ` Clique no botão para saber a sua estação climática ` //se não tiver mostra essa
-                                    }
-                                </p>
-                            </div>
-                            <button 
-                                onClick={this.oterLocalizacao}
-                                className='btn btn-outline-primary w-100 mt-2'>
-                                    Qual a minha estação?
-                            </button>
-                            {/* Criando o botão que vai matar a aplicação para exemplificar seu uso. */}
-                            <button 
-                                className="btn btn-outline-danger w-100 mt-2"
-                                onClick={() =>{
-                                    ReactDOM.unmountComponentAtNode(document.querySelector('#root'))
-                                }
-                                }>
-                                Unmount ◡̈
-                            </button>
-                        </div>
-                    </div>
+                {
+                    (!this.state.mensagemDeErro && !this.state.latitude) 
+                    ?
+                    <Loading />
+                    :
+                    this.state.mensagemDeErro 
+                        ? 
+                        <p className="border rounded p-2 fs-1">
+                            é preciso dar permissão para acesso à localização
+                        </p>
+                        :
+                        <EstacaoClimatica 
+                            icone={this.state.icone}
+                            estacao={this.state.estacao}
+                            latitude={this.state.latitude}
+                            longitude={this.state.longitude}
+                            //data={this.state.data}
+                            //mensagemDeErro={this.state.mensagemDeErro}
+                            oterLocalizacao={this.oterLocalizacao} /* funciona com todos as chamadas, o que muda é a forma de passar */
+                        />
+                }
                 </div>
             </div>
         </div>
